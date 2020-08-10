@@ -16,7 +16,7 @@
       const YOUR_API_KEY = "";
 
       const apiKeyResolved =
-        YOUR_API_KEY || getAPIKeyFromQuery() || localStorage.getItem("api_key");
+        YOUR_API_KEY || getAPIKeyFromQuery() || localStorage.getItem("api_key") || "pk_test_1FC14E4ED2A64FCD";
 
       const magic = new Magic(apiKeyResolved, {
         extensions: [new MagicOAuthExtension()],

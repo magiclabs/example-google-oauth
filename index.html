@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Magic / Google OAuth Demo</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css"
+    />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/magic-sdk/dist/magic.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@magic-ext/oauth/dist/extension.js"></script>
+    <script>
+      const YOUR_API_KEY = "";
+
+      const apiKeyResolved =
+        YOUR_API_KEY || getAPIKeyFromQuery() || localStorage.getItem("api_key");
+
+      const magic = new Magic(apiKeyResolved, {
+        extensions: [new MagicOAuthExtension()],
+        endpoint: "https://auth.dev.magic.link/"
+      });
+
+      const render = async () => {
+        let html = ``;
+
+        if (window.location.pathname === "/callback") {
+          try {
+            const result = await magic.oauth.getRedirectResult();
+            const profile = JSON.stringify(result.oauth.userInfo, undefined, 2);
+
+            html = `
+                <h1>Your User Profile:</h1>
+                <pre><code class="json tomorrow">${profile}</code></pre>
+              `;
+          } catch {
+            window.location.href = window.location.origin;
+          }
+        } else {
+          html = `
+              <h1>Please sign up or log in</h1>
+              <form onsubmit="handleLogin(event)">
+                <button id="btn-send" class="google" type="submit">
+                  <img src="./sign-in-with-google.svg" />
+                </button>
+              </form>
+            `;
+        }
+
+        document.getElementById("app").innerHTML = html;
+        document.querySelectorAll("pre code").forEach((block) => {
+          hljs.highlightBlock(block);
+        });
+      };
+
+      /**
+       * Starts the OAuth 2.0 login flow.
+       */
+      const handleLogin = async (e) => {
+        e.preventDefault();
+
+        // Render a button "pending" state.
+        const btnSend = document.getElementById("btn-send");
+        btnSend.disabled = true;
+        btnSend.innerText = "Logging in...";
+
+        localStorage.setItem("api_key", apiKeyResolved);
+
+        // Start the Google OAuth 2.0 flow!
+        const didToken = await magic.oauth.loginWithRedirect({
+          provider: "google",
+          redirectURI: "https://kenec.csb.app/callback"
+        });
+      };
+
+      /**
+       * A very simple query parser that reads from `window.location.search`.
+       */
+      function parseQuery() {
+        const queryString = window.location.search;
+        const result = {};
+        const pairs = (queryString[0] === "?"
+          ? queryString.substr(1)
+          : queryString
+        ).split("&");
+
+        pairs.forEach((pair) => {
+          const [key, value] = pair.split("=");
+          result[decodeURIComponent(key)] = decodeURIComponent(value || "");
+        });
+
+        return result;
+      }
+
+      /**
+       * Retrieves an API key value from the current URL query, if present.
+       */
+      function getAPIKeyFromQuery() {
+        return parseQuery().api_key;
+      }
+
+      window.onload = render;
+    </script>
+  </head>
+  <body>
+    <div id="app">Loading...</div>
+  </body>
+</html>

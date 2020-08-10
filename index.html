@@ -20,7 +20,6 @@
 
       const magic = new Magic(apiKeyResolved, {
         extensions: [new MagicOAuthExtension()],
-        endpoint: "https://auth.dev.magic.link/"
       });
 
       const render = async () => {
@@ -71,7 +70,7 @@
         // Start the Google OAuth 2.0 flow!
         const didToken = await magic.oauth.loginWithRedirect({
           provider: "google",
-          redirectURI: "https://kenec.csb.app/callback"
+          redirectURI: `${window.location.origin}/callback`
         });
       };
 

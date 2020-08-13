@@ -13,12 +13,9 @@
     <script src="https://cdn.jsdelivr.net/npm/magic-sdk/dist/magic.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@magic-ext/oauth/dist/extension.js"></script>
     <script>
-      const YOUR_API_KEY = "";
+      const MAGIC_API_KEY = "pk_test_1FC14E4ED2A64FCD";
 
-      const apiKeyResolved =
-        YOUR_API_KEY || getAPIKeyFromQuery() || localStorage.getItem("api_key") || "pk_test_1FC14E4ED2A64FCD";
-
-      const magic = new Magic(apiKeyResolved, {
+      const magic = new Magic(MAGIC_API_KEY, {
         extensions: [new MagicOAuthExtension()],
       });
 
@@ -73,32 +70,6 @@
           redirectURI: `${window.location.origin}/callback`
         });
       };
-
-      /**
-       * A very simple query parser that reads from `window.location.search`.
-       */
-      function parseQuery() {
-        const queryString = window.location.search;
-        const result = {};
-        const pairs = (queryString[0] === "?"
-          ? queryString.substr(1)
-          : queryString
-        ).split("&");
-
-        pairs.forEach((pair) => {
-          const [key, value] = pair.split("=");
-          result[decodeURIComponent(key)] = decodeURIComponent(value || "");
-        });
-
-        return result;
-      }
-
-      /**
-       * Retrieves an API key value from the current URL query, if present.
-       */
-      function getAPIKeyFromQuery() {
-        return parseQuery().api_key;
-      }
 
       window.onload = render;
     </script>

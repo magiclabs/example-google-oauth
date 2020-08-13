@@ -62,8 +62,6 @@
         btnSend.disabled = true;
         btnSend.innerText = "Logging in...";
 
-        localStorage.setItem("api_key", apiKeyResolved);
-
         // Start the Google OAuth 2.0 flow!
         const didToken = await magic.oauth.loginWithRedirect({
           provider: "google",

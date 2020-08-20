@@ -16,6 +16,12 @@ body {
 
 h1 {
   margin: 0;
+  padding-bottom: 1.5rem;
+  font-size: 36px;
+}
+
+h2 {
+  margin: 0;
   padding-bottom: 18px;
   font-size: 18px;
 }

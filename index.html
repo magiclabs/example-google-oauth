@@ -28,7 +28,8 @@
             const profile = JSON.stringify(result.oauth.userInfo, undefined, 2);
 
             html = `
-                <h1>Your User Profile:</h1>
+                <h1>It Worked! 🎉</h1>
+                <h2>Your User Profile:</h2>
                 <pre><code class="json tomorrow">${profile}</code></pre>
               `;
           } catch {
@@ -36,7 +37,7 @@
           }
         } else {
           html = `
-              <h1>Please sign up or log in</h1>
+              <h2>Please sign up or log in</h2>
               <form onsubmit="handleLogin(event)">
                 <button id="btn-send" class="google" type="submit">
                   <img src="./sign-in-with-google.svg" />

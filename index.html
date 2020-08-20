@@ -68,11 +68,9 @@
           redirectURI: `${window.location.origin}/callback`
         });
       };
-
-      window.onload = render;
     </script>
   </head>
-  <body>
+  <body onload="render()">
     <div id="app">Loading...</div>
   </body>
 </html>
